@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS assignments
 (
     id SERIAL PRIMARY KEY,
     title VARCHAR(100) NOT NULL,
-    due_date TIMESTAMP DEFAULT now()
+    due_date DATE
 );
 
 CREATE TABLE IF NOT EXISTS submissions 
@@ -18,6 +18,6 @@ CREATE TABLE IF NOT EXISTS submissions
     id SERIAL PRIMARY KEY,
     user_id INT UNIQUE REFERENCES users(id) ON DELETE CASCADE,
     assignment_id INT UNIQUE REFERENCES assignments(id) ON DELETE CASCADE,
-    submitted_at DATE,
+    submitted_at TIMESTAMP DEFAULT now(),
     grade SMALLINT NULL
 );
