@@ -26,7 +26,7 @@ async def submit(message: Message, command: CommandObject):
     else:
         await message.answer(f'Вы сдали задани: {sub}')
 
-
+@router.message(F.text == '📊 Мои оценки')
 @router.message(Command('my_grade'))
 async def grades(message: Message):
     user = message.from_user
@@ -39,6 +39,10 @@ async def grades(message: Message):
             text += f'Task: {found_task(i['id'])} | DATE: {i['submitted_at']} | Grade: {i['grade']}'
         await message.answer(green(text))
 
+@router.message(F.text == 'MENU')
+@router.message(Command('menu'))
+async def menu(message: Message):
+    await message.answer('Привет это меню для Проверки домашных заданый!\n\n/assigment - показать все мои задание\n/add_assigment - Добавить задание\n/submit - Выполнить звдание\n/set_grade - Поставить оценку\n/my_grades - Показать все мои оценки\n/average_grade - Средный балл по всех заланиям!', reply_markup=menu())
 
 
 @router.message(F.text == 'SHOW ALL USERS')
@@ -56,7 +60,7 @@ async def other(message: Message):
 @router.message(F.text == 'HELP')
 @router.message(Command('help'))
 async def help(message: Message):
-    await message.answer('Это бот HOMEWORK TRACKER\n\n/start - Для запуска бота\n/help - Для помощьи\n/show_users - Показать всех ползователей')
+    await message.answer('Это бот HOMEWORK TRACKER\n\n/start - Для запуска бота\n/help - Для помощьи\n/show_users - Показать всех ползователей\n/menu - Меню для проверки заданый')
 
 @router.message(F.text == 'PROFILE')
 @router.message(Command('profile'))

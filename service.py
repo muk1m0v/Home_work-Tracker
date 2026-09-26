@@ -1,4 +1,4 @@
-from data.db import get_connection
+from services.db import get_connection
 from mukimov.color import green, red
 
 
