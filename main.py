@@ -1,6 +1,6 @@
 from aiogram import Dispatcher, Bot
 from mukimov.color import green
-from data.db import init_tables
+from data.db import *
 from handler.handler import router
 from os import getenv
 from dotenv import load_dotenv

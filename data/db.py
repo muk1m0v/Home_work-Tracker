@@ -13,10 +13,10 @@ async def get_connection():
             port=getenv('DB_PORT')
         )
 
-        print(green('Tables Created!'))
+        print(green('Database Connected!'))
         return conn
     except Exception as err:
-        print(red(f'Tables Created Error: {err}'))
+        print(red(f'Connected Database Error: {err}'))
 
 async def init_tables():
     conn = await get_connection()
