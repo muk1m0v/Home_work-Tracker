@@ -31,13 +31,12 @@ async def submit(message: Message, command: CommandObject):
 async def grades(message: Message):
     user = message.from_user
     grade = await my_grades(user.id)
-    find = await found_task()
     if not grade:
         await message.answer('У вас пока нет Оценок!')
     else:
         text = 'Grades\n'
         for i in grade:
-            text += f'Task: {find(i['id'])} | DATE: {i['submitted_at']} | Grade: {i['grade']}'
+            text += f'Task: {found_task(i['id'])} | DATE: {i['submitted_at']} | Grade: {i['grade']}'
         await message.answer(green(text))
 
 

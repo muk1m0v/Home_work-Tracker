@@ -70,7 +70,9 @@ async def my_grades(telegram_id):
     try:
         conn = await get_connection()
         await conn.fetch('''
-        SELECT * FROM submissions WHERE telegram_id = $1
+        SELECT s.* FROM submissions as s
+        JOIN users as u ON s.user_id = u.id
+        WHERE u.telegram_id = $1;
         ''', str(telegram_id))
     except Exception as err:
         print(red(f'Add Grades Error: {err}'))
