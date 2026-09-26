@@ -12,9 +12,9 @@ async def start(message: Message):
     is_login = await check_users(user.id)
     if not is_login:
         await save_user(user.id, user.username, user.full_name)
-    else:
-        text = f'Welcome, <b>{user.full_name}</b>'
-        await message.answer(text, parse_mode='HTML', reply_markup=main())
+    
+    text = f'Welcome, <b>{user.full_name}</b>'
+    await message.answer(text, parse_mode='HTML', reply_markup=main())
 
 @router.message(F.text == 'SHOW ALL USERS')
 @router.message(Command('show_users'))
@@ -31,7 +31,7 @@ async def other(message: Message):
 @router.message(F.text == 'HELP')
 @router.message(Command('help'))
 async def help(message: Message):
-    await message.answer('Это бот HOMEWORK TRACKER\n\n')
+    await message.answer('Это бот HOMEWORK TRACKER\n\n/start - Для запуска бота\n/help - Для помощьи\n/show_users - Показать всех ползователей')
 
 @router.message(F.text == 'PROFILE')
 @router.message(Command('profile'))
