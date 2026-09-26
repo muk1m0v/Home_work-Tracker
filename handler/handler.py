@@ -11,7 +11,7 @@ async def start(message: Message):
     user = message.from_user
     is_login = await check_users(user.id)
     if not is_login:
-        save_user(user.id, user.username, user.full_name)
+        await save_user(user.id, user.username, user.full_name)
     else:
         text = f'Welcome, <b>{user.full_name}</b>'
         await message.answer(text, parse_mode='HTML', reply_markup=main())
