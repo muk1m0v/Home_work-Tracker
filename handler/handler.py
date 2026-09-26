@@ -17,8 +17,14 @@ async def start(message: Message):
     await message.answer(text, parse_mode='HTML', reply_markup=main())
 
 @router.message(Command("submit"))
-async def submit(message: Message, command: CommandObject)
-    
+async def submit(message: Message, command: CommandObject):
+    user = message.from_user
+    sub = command.args
+    completed = await new_submit(user.id, sub)
+    if not completed:
+        await message.answer(F'У вас нет задачи с ID: {sub}')
+    else:
+        await message.answer(f'Вы сдали задани: {sub}')
 
 
 @router.message(F.text == 'SHOW ALL USERS')

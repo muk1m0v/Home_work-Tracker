@@ -19,5 +19,5 @@ CREATE TABLE IF NOT EXISTS submissions
     user_id INT UNIQUE REFERENCES users(id) ON DELETE CASCADE,
     assignment_id INT UNIQUE REFERENCES assignments(id) ON DELETE CASCADE,
     submitted_at TIMESTAMP DEFAULT now(),
-    grade SMALLINT NULL
+    grade SMALLINT NULL CHECK(grade > 0 and grade < 100)
 );

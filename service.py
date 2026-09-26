@@ -41,14 +41,16 @@ async def save_user(telegram_id, username, full_name):
         await conn.close()
 
 
-async def new_submit(assignment_id):
+async def new_submit(user_id, assignment_id):
     try:
         conn = await get_connection()
-        await conn.execute('''
+        ready = await conn.execute('''
         INSERT INTO submissions (user_id, assignment_id) VALUES 
         ($1, $2);
-        ''', assignment_id) 
+        ''', str(user_id), assignment_id) 
+
+        return ready
     except Exception as err:
-        print(red(f'Add Assigment Error: {err}'))
+        print(red(f'Add submissions Error: {err}'))
     finally:
         await conn.close()
