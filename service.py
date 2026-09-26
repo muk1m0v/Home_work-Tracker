@@ -15,6 +15,19 @@ async def get_users():
     finally:
         await conn.close()
 
+async def found_task(assignment_id):
+    try:
+        conn = await get_connection()
+        find_user = await conn.fetch('''
+        SELECT title from assignments where id = $1
+        ''', assignment_id) 
+
+        return find_user
+    except Exception as err:
+        print(red(f'Found User Error: {err}'))
+    finally:
+        await conn.close()
+
 async def check_users(telegram_id):
     try:
         conn = await get_connection()
@@ -44,13 +57,22 @@ async def save_user(telegram_id, username, full_name):
 async def new_submit(user_id, assignment_id):
     try:
         conn = await get_connection()
-        ready = await conn.execute('''
+        await conn.execute('''
         INSERT INTO submissions (user_id, assignment_id) VALUES 
         ($1, $2);
         ''', str(user_id), assignment_id) 
-
-        return ready
     except Exception as err:
         print(red(f'Add submissions Error: {err}'))
+    finally:
+        await conn.close()
+
+async def my_grades(telegram_id):
+    try:
+        conn = await get_connection()
+        await conn.fetch('''
+        SELECT * FROM submissions WHERE telegram_id = $1
+        ''', str(telegram_id))
+    except Exception as err:
+        print(red(f'Add Grades Error: {err}'))
     finally:
         await conn.close()
