@@ -1,5 +1,6 @@
 from aiogram import Dispatcher, Bot
-from mukimov.color import red, green
+from mukimov.color import green
+from data.db import init_tables
 from handler.handler import router
 from os import getenv
 from dotenv import load_dotenv
@@ -15,6 +16,7 @@ async def main():
     print(green('Bot Started!'))
 
     dp.include_router(router)
+    await init_tables()
     await dp.start_polling(bot)
 
 if __name__ == '__main__':
