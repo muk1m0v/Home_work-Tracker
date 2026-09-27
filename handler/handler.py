@@ -1,7 +1,7 @@
 from aiogram import Router, F 
 from aiogram.filters import CommandStart, Command, CommandObject 
 from aiogram.types import Message
-from board import main
+from board import *
 from service import *
 
 router = Router()
@@ -16,14 +16,34 @@ async def start(message: Message):
     text = f'Welcome, <b>{user.full_name}</b>'
     await message.answer(text, parse_mode='HTML', reply_markup=main())
 
+@router.message(F.text == '📚 Задания')
+@router.message(Command('assigments'))
+async def tasks(message: Message, command: CommandObject):
+    task = command.args.split(',')
+    
+
+
 @router.message(Command('add_assigment'))
 async def add_assigment(message: Message, command: CommandObject):
     user = message.from_user
-    add = command.args.split(' ')
+    add = command.args.split(',')
     text = f'ВЫ {user.full_name} добавили задание\n\n'
     for i in add:
+        add_assing(i[0], i[1])
         text += f'TASK: {i[0]}\nDATE: {i[1]}'
     await message.answer()
+
+@router.message(F.text == 'Выпольнить Задание')
+async def sub_it(message: Message):
+    await message.answer('Исползуй команду:\n/submit 1 - виполгить задание под ID: 1')
+
+@router.message(F.text == 'Добавить Задание')
+async def sub_it(message: Message):
+    await message.answer('Исползуй команду:\n/add_assigment Сделать экзамен, 2026-090-30 - Пример ввода!')
+
+@router.message(F.text == 'Поставить оценку')
+async def sub_it(message: Message):
+    await message.answer('Исползуй команду:\n/set_grade Сделать экзамен, 2026-090-30 - Пример ввода!')
 
 @router.message(Command("submit"))
 async def submit(message: Message, command: CommandObject):
@@ -50,7 +70,7 @@ async def grades(message: Message):
 
 @router.message(F.text == 'MENU')
 @router.message(Command('menu'))
-async def menu(message: Message):
+async def start_menu(message: Message):
     await message.answer('Привет это меню для Проверки домашных заданый!\n\n/assigment - показать все мои задание\n/add_assigment - Добавить задание\n/submit - Выполнить звдание\n/set_grade - Поставить оценку\n/my_grades - Показать все мои оценки\n/average_grade - Средный балл по всех заланиям!', reply_markup=menu())
 
 @router.message(F.text == 'SHOW ALL USERS')
