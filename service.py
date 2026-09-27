@@ -15,6 +15,27 @@ async def get_users():
     finally:
         await conn.close()
 
+async def get_assignments():
+    conn = await get_connection()
+    try:
+        return await conn.fetch(
+            'SELECT * FROM assignments ORDER BY id'
+        )
+    finally:
+        await conn.close()
+
+async def get_all(telegram_id):
+    conn = await get_connection()
+    try:
+        tasker = await conn.fetch('''
+            SELECT s.assignment_id FROM submissions as
+            JOIN users as u ON s.user_id = u.id
+            WHERE u.telegram_id = $1
+            ''', str(telegram_id))
+        return tasker
+    finally:
+        await conn.close()
+
 async def found_task(assignment_id):
     try:
         conn = await get_connection()

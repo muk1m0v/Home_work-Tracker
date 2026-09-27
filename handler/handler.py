@@ -19,7 +19,24 @@ async def start(message: Message):
 @router.message(F.text == '📚 Задания')
 @router.message(Command('assigments'))
 async def tasks(message: Message):
-    
+    user = message.from_user
+    assignments = await get_assignments()
+    sub = await get_all(user.id)
+    zhurnal = []
+
+    for i in sub:
+        zhurnal.append(i['assignment_id'])
+
+    text = '📚 Ваши задания:\n\n'
+    for task in assignments:
+        if task['id'] not in sub:
+            text += (
+                f"ID: {task['id']}\n"
+                f"📝 {task['title']}\n"
+                f"📅 До: {task['due_date']}\n\n"
+            )
+
+    await message.answer(text)
 
 
 
