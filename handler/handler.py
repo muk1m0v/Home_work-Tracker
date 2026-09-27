@@ -16,6 +16,15 @@ async def start(message: Message):
     text = f'Welcome, <b>{user.full_name}</b>'
     await message.answer(text, parse_mode='HTML', reply_markup=main())
 
+@router.message(Command('add_assigment'))
+async def add_assigment(message: Message, command: CommandObject):
+    user = message.from_user
+    add = command.args.split(' ')
+    text = f'ВЫ {user.full_name} добавили задание\n\n'
+    for i in add:
+        text += f'TASK: {i[0]}\nDATE: {i[1]}'
+    await message.answer()
+
 @router.message(Command("submit"))
 async def submit(message: Message, command: CommandObject):
     user = message.from_user
@@ -44,7 +53,6 @@ async def grades(message: Message):
 async def menu(message: Message):
     await message.answer('Привет это меню для Проверки домашных заданый!\n\n/assigment - показать все мои задание\n/add_assigment - Добавить задание\n/submit - Выполнить звдание\n/set_grade - Поставить оценку\n/my_grades - Показать все мои оценки\n/average_grade - Средный балл по всех заланиям!', reply_markup=menu())
 
-
 @router.message(F.text == 'SHOW ALL USERS')
 @router.message(Command('show_users'))
 async def other(message: Message):
@@ -54,7 +62,7 @@ async def other(message: Message):
     else:
         text = 'Users:\n'
         for i in users:
-            text += f'ID: {i['id']} | Username: {i['username']} | {i['full_name']}'
+            text += f'ID: {i['id']} | Username: @{i['username']} | {i['full_name']}'
         await message.answer(text)
 
 @router.message(F.text == 'HELP')
@@ -71,4 +79,4 @@ async def profile(message: Message):
 @router.message()
 async def other(message: Message):
     user = message.from_user
-    await message.answer(f'{user.username}: {message.text}\n\nBot: Можно по человечески')
+    await message.answer(f'@{user.username}: {message.text}\n\nBot: Можно по человечески')

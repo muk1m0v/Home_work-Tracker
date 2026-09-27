@@ -21,7 +21,7 @@ async def get_connection():
 async def init_tables():
     conn = await get_connection()
     try:
-        with open("data/home_tracker.sql", "r") as file:
+        with open("services/home_tracker.sql", "r") as file:
             sql = file.read()
         await conn.execute(sql)
         print(green("Tables created!"))
