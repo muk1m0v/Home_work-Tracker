@@ -24,12 +24,17 @@ async def tasks(message: Message):
     sub = await get_all(user.id)
     zhurnal = []
 
+    if not sub:
+        await message.answer('У вас пока нет заданый!')
+        return
+
     for i in sub:
         zhurnal.append(i['assignment_id'])
+        
 
     text = '📚 Ваши задания:\n\n'
     for task in assignments:
-        if task['id'] not in sub:
+        if task['id'] not in zhurnal:
             text += (
                 f"ID: {task['id']}\n"
                 f"📝 {task['title']}\n"

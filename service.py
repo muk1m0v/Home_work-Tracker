@@ -28,8 +28,8 @@ async def get_all(telegram_id):
     conn = await get_connection()
     try:
         tasker = await conn.fetch('''
-            SELECT s.assignment_id FROM submissions as
-            JOIN users as u ON s.user_id = u.id
+            SELECT s.assignment_id FROM submissions as s 
+            INNER JOIN users as u ON s.user_id = u.id 
             WHERE u.telegram_id = $1
             ''', str(telegram_id))
         return tasker
