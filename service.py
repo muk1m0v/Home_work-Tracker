@@ -69,10 +69,12 @@ async def add_assing(title, date):
 async def new_submit(user_id, assignment_id):
     try:
         conn = await get_connection()
-        await conn.execute('''
+        new = await conn.execute('''
         INSERT INTO submissions (user_id, assignment_id) VALUES 
         ($1, $2);
         ''', str(user_id), assignment_id) 
+
+        return new
     except Exception as err:
         print(red(f'Add submissions Error: {err}'))
     finally:

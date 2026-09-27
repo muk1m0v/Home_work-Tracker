@@ -3,6 +3,8 @@ from dotenv import load_dotenv
 from os import getenv
 import asyncpg
 
+load_dotenv()
+
 async def get_connection():
     try:
         conn = await asyncpg.connect(

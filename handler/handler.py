@@ -22,6 +22,7 @@ async def tasks(message: Message):
     
 
 
+
 @router.message(Command('add_assigment'))
 async def add_assigment(message: Message, command: CommandObject):
     user = message.from_user
@@ -41,7 +42,7 @@ async def sub_it(message: Message):
 
 @router.message(F.text == 'Добавить Задание')
 async def sub_it(message: Message):
-    await message.answer('Исползуй команду:\n/add_assigment Сделать экзамен, 2026-090-30 - Пример ввода!')
+    await message.answer('Исползуй команду:\n/add_assigment Сделать экзамен, 2026-09-30 - Пример ввода!')
 
 @router.message(F.text == 'Поставить оценку')
 async def sub_it(message: Message):
