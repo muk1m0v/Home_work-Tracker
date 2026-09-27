@@ -78,6 +78,17 @@ async def new_submit(user_id, assignment_id):
     finally:
         await conn.close()
 
+async def get_tasks(telegram_id):
+    try:
+        conn = await get_connection()
+        await conn.fetch('''
+        SELECT * FROM WHERE 
+        ''', str(telegram_id))
+    except Exception as err:
+        print(red(f'Add Grades Error: {err}'))
+    finally:
+        await conn.close()
+
 async def my_grades(telegram_id):
     try:
         conn = await get_connection()

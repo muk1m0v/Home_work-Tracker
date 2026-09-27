@@ -18,8 +18,7 @@ async def start(message: Message):
 
 @router.message(F.text == '📚 Задания')
 @router.message(Command('assigments'))
-async def tasks(message: Message, command: CommandObject):
-    task = command.args.split(',')
+async def tasks(message: Message):
     
 
 
@@ -27,11 +26,14 @@ async def tasks(message: Message, command: CommandObject):
 async def add_assigment(message: Message, command: CommandObject):
     user = message.from_user
     add = command.args.split(',')
-    text = f'ВЫ {user.full_name} добавили задание\n\n'
-    for i in add:
-        add_assing(i[0], i[1])
-        text += f'TASK: {i[0]}\nDATE: {i[1]}'
-    await message.answer()
+    if not add:
+        message.answer('Введите так!\n/add_assigment Сделать Database для проекта, 2026-10-02 (тут важена запитая , )')
+    else:
+        text = f'ВЫ {user.full_name} добавили задание\n\n'
+        for i in add:
+            add_assing(i[0], i[1])
+            text += f'TASK: {i[0]}\nDATE: {i[1]}'
+        await message.answer(text)
 
 @router.message(F.text == 'Выпольнить Задание')
 async def sub_it(message: Message):

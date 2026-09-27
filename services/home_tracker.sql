@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS users
 CREATE TABLE IF NOT EXISTS assignments
 (
     id SERIAL PRIMARY KEY,
+    user_id INT UNIQUE REFERENCES users(id) ON DELETE CASCADE,
     title VARCHAR(100) NOT NULL,
     due_date DATE
 );
