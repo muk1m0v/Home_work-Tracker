@@ -91,7 +91,7 @@ async def grades(message: Message):
 @router.message(F.text == 'MENU')
 @router.message(Command('menu'))
 async def start_menu(message: Message):
-    await message.answer('Привет это меню для Проверки домашных заданый!\n\n/assigment - показать все мои задание\n/add_assigment - Добавить задание\n/submit - Выполнить звдание\n/set_grade - Поставить оценку\n/my_grades - Показать все мои оценки\n/average_grade - Средный балл по всех заланиям!', reply_markup=menu())
+    await message.answer('Привет это меню для Проверки домашных заданый!\n\n/assigments - показать все мои задание\n/add_assigment - Добавить задание\n/submit - Выполнить звдание\n/set_grade - Поставить оценку\n/my_grades - Показать все мои оценки\n/average_grade - Средный балл по всех заланиям!', reply_markup=menu())
 
 @router.message(F.text == 'SHOW ALL USERS')
 @router.message(Command('show_users'))
