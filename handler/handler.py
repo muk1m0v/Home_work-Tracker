@@ -3,6 +3,7 @@ from aiogram.filters import CommandStart, Command, CommandObject
 from aiogram.types import Message
 from board import *
 from service import *
+from datetime import strptime
 
 router = Router()
 
@@ -48,14 +49,16 @@ async def tasks(message: Message):
 @router.message(Command('add_assigment'))
 async def add_assigment(message: Message, command: CommandObject):
     user = message.from_user
-    add = command.args.split(',')
+    add = command.args.split(',').strip()
     if not add:
         await message.answer('Введите так!\n/add_assigment Сделать Database для проекта, 2026-10-02 (тут важена запитая , )')
-    elif len(add) > 2:
+    elif len(add) != 2:
         await message.answer('Введите 2 текста и всё пример после коммандыn\nЭкзамен, 2026-09-28')
     else:
-        await add_assing(add[0], add[1])
-        text = f'ВЫ {user.full_name}\nдобавили задание\n\nTASK: {add[0]}\n\nDATE: {add[1]}'
+        title = add[0].strip()
+        due_date = strptime(add[1].strip(), '%Y-%m-%d').date()
+        await add_assing(title, due_date)
+        text = f'ВЫ {user.full_name}\nдобавили задание!\n\nTASK: {add[0]}\n\nDATE: {add[1]}'
         await message.answer(text)
 
 @router.message(F.text == 'Выпольнить Задание')
