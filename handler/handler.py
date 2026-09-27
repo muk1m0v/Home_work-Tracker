@@ -37,8 +37,8 @@ async def tasks(message: Message):
         if task['id'] not in zhurnal:
             text += (
                 f"ID: {task['id']}\n"
-                f"📝 {task['title']}\n"
-                f"📅 До: {task['due_date']}\n\n"
+                f"TITLE {task['title']}\n"
+                f"DATE AT: {task['due_date']}\n\n"
             )
 
     await message.answer(text)
@@ -50,12 +50,12 @@ async def add_assigment(message: Message, command: CommandObject):
     user = message.from_user
     add = command.args.split(',')
     if not add:
-        message.answer('Введите так!\n/add_assigment Сделать Database для проекта, 2026-10-02 (тут важена запитая , )')
+        await message.answer('Введите так!\n/add_assigment Сделать Database для проекта, 2026-10-02 (тут важена запитая , )')
+    elif len(add) > 2:
+        await message.answer('Введите 2 текста и всё пример после коммандыn\nЭкзамен, 2026-09-28')
     else:
-        text = f'ВЫ {user.full_name} добавили задание\n\n'
-        for i in add:
-            add_assing(i[0], i[1])
-            text += f'TASK: {i[0]}\nDATE: {i[1]}'
+        await add_assing(add[0], add[1])
+        text = f'ВЫ {user.full_name}\nдобавили задание\n\nTASK: {add[0]}\n\nDATE: {add[1]}'
         await message.answer(text)
 
 @router.message(F.text == 'Выпольнить Задание')
