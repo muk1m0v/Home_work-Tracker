@@ -87,14 +87,31 @@ async def add_assing(title, date):
         await conn.close()
 
 
-async def new_submit(user_id, assignment_id):
+async def set_grade_db(assignment_id, grade):
+    conn = await get_connection()
     try:
-        conn = await get_connection()
-        new = await conn.execute('''
-        INSERT INTO submissions (user_id, assignment_id) VALUES 
-        ($1, $2);
-        ''', str(user_id), assignment_id) 
+        await conn.execute('''
+        UPDATE submissions SET grade = $1
+        WHERE assignment_id = $2
+        ''', grade, assignment_id)
+    except Exception as err:
+        print(red(f'Set Grade Error: {err}'))
+    finally:
+        await conn.close()
 
+async def new_submit(telegram_id, assignment_id):
+    conn = await get_connection()
+    try:
+        user_id = await conn.fetchval('SELECT id FROM users WHERE telegram_id = $1',
+        str(telegram_id))
+
+        if user_id is None:
+            return None
+        new = await conn.execute('''
+        INSERT INTO submissions (user_id, assignment_id)
+        VALUES ($1, $2)
+        ''', user_id, int(assignment_id))
+        
         return new
     except Exception as err:
         print(red(f'Add submissions Error: {err}'))
@@ -120,6 +137,7 @@ async def my_grades(telegram_id):
         JOIN users as u ON s.user_id = u.id
         WHERE u.telegram_id = $1;
         ''', str(telegram_id))
+
     except Exception as err:
         print(red(f'Add Grades Error: {err}'))
     finally:

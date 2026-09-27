@@ -3,7 +3,7 @@ from aiogram.filters import CommandStart, Command, CommandObject
 from aiogram.types import Message
 from board import *
 from service import *
-from datetime import strptime
+from datetime import datetime
 
 router = Router()
 
@@ -18,47 +18,39 @@ async def start(message: Message):
     await message.answer(text, parse_mode='HTML', reply_markup=main())
 
 @router.message(F.text == '📚 Задания')
-@router.message(Command('assigments'))
+@router.message(Command('assignments'))
 async def tasks(message: Message):
     user = message.from_user
     assignments = await get_assignments()
     sub = await get_all(user.id)
-    zhurnal = []
 
-    if not sub:
-        await message.answer('У вас пока нет заданый!')
+    if not assignments:
+        await message.answer('У вас пока нет заданий!')
         return
-
+    zhurnal = []
     for i in sub:
         zhurnal.append(i['assignment_id'])
-        
-
     text = '📚 Ваши задания:\n\n'
     for task in assignments:
         if task['id'] not in zhurnal:
-            text += (
-                f"ID: {task['id']}\n"
-                f"TITLE {task['title']}\n"
-                f"DATE AT: {task['due_date']}\n\n"
-            )
-
+            text += (f"ID: {task['id']}\nTITLE: {task['title']}\nDATE AT: {task['due_date']}\n")
     await message.answer(text)
 
 
 
-@router.message(Command('add_assigment'))
+@router.message(Command('add_assignment'))
 async def add_assigment(message: Message, command: CommandObject):
     user = message.from_user
-    add = command.args.split(',').strip()
+    add = command.args.split(',')
     if not add:
         await message.answer('Введите так!\n/add_assigment Сделать Database для проекта, 2026-10-02 (тут важена запитая , )')
     elif len(add) != 2:
         await message.answer('Введите 2 текста и всё пример после коммандыn\nЭкзамен, 2026-09-28')
     else:
         title = add[0].strip()
-        due_date = strptime(add[1].strip(), '%Y-%m-%d').date()
+        due_date = datetime.strptime(add[1].strip(), '%Y-%m-%d').date()
         await add_assing(title, due_date)
-        text = f'ВЫ {user.full_name}\nдобавили задание!\n\nTASK: {add[0]}\n\nDATE: {add[1]}'
+        text = f'ВЫ {user.full_name}\nдобавили задание!✅\n\nTASK: {add[0]}\n\nDATE: {add[1]}'
         await message.answer(text)
 
 @router.message(F.text == 'Выпольнить Задание')
@@ -67,34 +59,52 @@ async def sub_it(message: Message):
 
 @router.message(F.text == 'Добавить Задание')
 async def sub_it(message: Message):
-    await message.answer('Исползуй команду:\n/add_assigment Сделать экзамен, 2026-09-30 - Пример ввода!')
+    await message.answer('Исползуй команду:\n/add_assignment Сделать экзамен, 2026-09-30 - Пример ввода!')
 
 @router.message(F.text == 'Поставить оценку')
 async def sub_it(message: Message):
-    await message.answer('Исползуй команду:\n/set_grade Сделать экзамен, 2026-090-30 - Пример ввода!')
+    await message.answer('Исползуй команду:\n/set_grade 1, 95 - Пример ввода!')
 
 @router.message(Command("submit"))
 async def submit(message: Message, command: CommandObject):
     user = message.from_user
     sub = command.args
+
     completed = await new_submit(user.id, sub)
+
     if not completed:
-        await message.answer(F'У вас нет задачи с ID: {sub}')
+        await message.answer(f'У вас нет задачи с ID: {sub}')
+    elif sub is None:
+        await message.answer('ID: НЕ МОЖЕТЬ БИТЬ ПУСТЫМ!')
     else:
-        await message.answer(f'Вы сдали задани: {sub}')
+        await message.answer(f'Вы сдали задание: {sub} ✅')
+
+@router.message(Command('set_grade'))
+async def set_grade(message: Message, command: CommandObject):
+    arg = command.args.split(',')
+
+    assignment_id = int(arg[0].strip())
+    grade = int(arg[1].strip())
+    res = await set_grade_db(assignment_id, grade)
+    if res is None:
+        await message.answer('У вас пока нет выполненных заданий')
+    else:
+        await message.answer(f'✅ Оценка {grade} поставлена!')
 
 @router.message(F.text == '📊 Мои оценки')
 @router.message(Command('my_grade'))
 async def grades(message: Message):
     user = message.from_user
-    grade = await my_grades(user.id)
-    if not grade:
-        await message.answer('У вас пока нет Оценок!')
-    else:
-        text = 'Grades\n'
-        for i in grade:
-            text += f'Task: {found_task(i['id'])} | DATE: {i['submitted_at']} | Grade: {i['grade']}'
-        await message.answer(green(text))
+    grades = await my_grades(user.id)
+
+    if not grades:
+        await message.answer('У вас пока нет оценок!')
+        return
+    text = '📊 Grades\n\n'
+    for i in grades:
+        task = await found_task(i['assignment_id'])
+        text += (f"Task: {task}\nDATE: {i['submitted_at']}\nGrade: {i['grade']}\n")
+    await message.answer(text)
 
 @router.message(F.text == 'MENU')
 @router.message(Command('menu'))

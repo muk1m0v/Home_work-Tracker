@@ -16,8 +16,8 @@ CREATE TABLE IF NOT EXISTS assignments
 CREATE TABLE IF NOT EXISTS submissions 
 (
     id SERIAL PRIMARY KEY,
-    user_id INT REFERENCES users(id) ON DELETE CASCADE,
-    assignment_id INT REFERENCES assignments(id) ON DELETE CASCADE,
+    user_id BIGINT REFERENCES users(id) ON DELETE CASCADE,
+    assignment_id BIGINT REFERENCES assignments(id) ON DELETE CASCADE,
     submitted_at TIMESTAMP DEFAULT now(),
     grade SMALLINT NULL CHECK(grade > 0 and grade < 100)
 );
